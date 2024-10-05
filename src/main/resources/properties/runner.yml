@@ -1,0 +1,6 @@
+runner:
+  dummy:
+    profile:
+      enabled: true
+      rows: 1000000
+      batch-size: 10000
