@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.tiary.dummydata.domain.Account;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.repository.AccountRepository;
-import me.tiary.dummydata.repository.ProfileRepository;
+import me.tiary.dummydata.service.ProfileService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -27,25 +27,25 @@ public final class AccountDummyRunner implements CommandLineRunner {
 
     private final AccountRepository accountRepository;
 
-    private final ProfileRepository profileRepository;
-
     private final long rows;
 
     private final long batchSize;
+
+    private final ProfileService profileService;
 
     private final Faker faker;
 
     public AccountDummyRunner(final TransactionTemplate transactionTemplate,
                               final AccountRepository accountRepository,
-                              final ProfileRepository profileRepository,
                               @Value("${runner.dummy.account.rows}") final long rows,
                               @Value("${runner.dummy.account.batch-size}") final long batchSize,
+                              final ProfileService profileService,
                               final Faker faker) {
         this.transactionTemplate = transactionTemplate;
         this.accountRepository = accountRepository;
-        this.profileRepository = profileRepository;
         this.rows = rows;
         this.batchSize = batchSize;
+        this.profileService = profileService;
         this.faker = faker;
     }
 
@@ -59,12 +59,12 @@ public final class AccountDummyRunner implements CommandLineRunner {
             throw new IllegalStateException("AccountDummyRunner requires at least 1 batch size");
         }
 
-        final long profileMinimumId = findProfileMinimumId();
+        final long profileMinimumId = profileService.findProfileMinimumId();
         final List<Account> accounts = new ArrayList<>();
         long row = 0L;
 
         while (true) {
-            final Optional<Profile> profile = profileRepository.findById(profileMinimumId + row);
+            final Optional<Profile> profile = profileService.findById(profileMinimumId + row);
 
             if (profile.isPresent()) {
                 final Account account = Account.builder()
@@ -101,16 +101,6 @@ public final class AccountDummyRunner implements CommandLineRunner {
 
     private String generateUniqueEmail(final long row) {
         return faker.internet().emailAddress(faker.internet().username() + row);
-    }
-
-    public long findProfileMinimumId() {
-        final Optional<Profile> firstProfile = profileRepository.findFirstByOrderByIdAsc();
-
-        if (firstProfile.isPresent()) {
-            return firstProfile.get().getId();
-        }
-
-        return -1L;
     }
 
     public void insertAccounts(final List<Account> accounts) {

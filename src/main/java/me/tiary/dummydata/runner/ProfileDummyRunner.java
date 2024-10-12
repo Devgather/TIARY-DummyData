@@ -2,14 +2,13 @@ package me.tiary.dummydata.runner;
 
 import lombok.extern.slf4j.Slf4j;
 import me.tiary.dummydata.domain.Profile;
-import me.tiary.dummydata.repository.ProfileRepository;
+import me.tiary.dummydata.service.ProfileService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -20,25 +19,21 @@ import java.util.List;
 @Order(1)
 @Slf4j
 public final class ProfileDummyRunner implements CommandLineRunner {
-    private final TransactionTemplate transactionTemplate;
-
-    private final ProfileRepository profileRepository;
-
     private final long rows;
 
     private final long batchSize;
 
+    private final ProfileService profileService;
+
     private final Faker faker;
 
-    public ProfileDummyRunner(final TransactionTemplate transactionTemplate,
-                              final ProfileRepository profileRepository,
-                              @Value("${runner.dummy.profile.rows}") final long rows,
+    public ProfileDummyRunner(@Value("${runner.dummy.profile.rows}") final long rows,
                               @Value("${runner.dummy.profile.batch-size}") final long batchSize,
+                              final ProfileService profileService,
                               final Faker faker) {
-        this.transactionTemplate = transactionTemplate;
-        this.profileRepository = profileRepository;
         this.rows = rows;
         this.batchSize = batchSize;
+        this.profileService = profileService;
         this.faker = faker;
     }
 
@@ -66,7 +61,7 @@ public final class ProfileDummyRunner implements CommandLineRunner {
 
             if (profiles.size() >= batchSize || row >= rows) {
                 try {
-                    insertProfiles(profiles);
+                    profileService.insertProfiles(profiles);
                     log.info("Inserted dummy Profiles: {} rows", NumberFormat.getInstance().format(profiles.size()));
                     profiles.clear();
                 } catch (final Exception ex) {
@@ -85,16 +80,5 @@ public final class ProfileDummyRunner implements CommandLineRunner {
         final int rowDigits = Long.toString(row).length();
 
         return faker.expression("#{letterify '" + "?".repeat(Profile.NICKNAME_MAX_LENGTH - rowDigits) + "'}" + row);
-    }
-
-    public void insertProfiles(final List<Profile> profiles) {
-        transactionTemplate.executeWithoutResult(status -> {
-            try {
-                profileRepository.saveAllAndFlush(profiles);
-            } catch (final Exception ex) {
-                status.setRollbackOnly();
-                throw ex;
-            }
-        });
     }
 }
