@@ -12,9 +12,8 @@ import java.util.UUID;
 @Table(name = "profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Builder
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@Getter
 public class Profile extends Timestamp {
     public static final int NICKNAME_MAX_LENGTH = 20;
 
@@ -25,7 +24,6 @@ public class Profile extends Timestamp {
     private Long id;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(length = NICKNAME_MAX_LENGTH, nullable = false, unique = true)

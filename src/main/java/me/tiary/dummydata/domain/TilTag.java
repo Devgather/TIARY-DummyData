@@ -1,7 +1,10 @@
 package me.tiary.dummydata.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import me.tiary.dummydata.domain.common.Timestamp;
 import me.tiary.dummydata.domain.composite.TilTagId;
 
@@ -12,8 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Getter
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class TilTag extends Timestamp {
     @EmbeddedId
     private TilTagId id;
@@ -29,7 +30,6 @@ public class TilTag extends Timestamp {
     private Tag tag;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @EqualsAndHashCode.Include
     private String uuid;
 
     @PrePersist

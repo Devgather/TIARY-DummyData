@@ -1,7 +1,10 @@
 package me.tiary.dummydata.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.tiary.dummydata.domain.common.Timestamp;
 
 import java.util.ArrayList;
@@ -12,7 +15,6 @@ import java.util.UUID;
 @Table(name = "til")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Til extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +25,6 @@ public class Til extends Timestamp {
     private Profile profile;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(nullable = false)

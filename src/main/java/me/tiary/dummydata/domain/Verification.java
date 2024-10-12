@@ -1,7 +1,10 @@
 package me.tiary.dummydata.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import me.tiary.dummydata.domain.common.Timestamp;
 import me.tiary.dummydata.utility.StringUtility;
 
@@ -12,8 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Getter
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Verification extends Timestamp {
     public static final int CODE_MAX_LENGTH = 6;
 
@@ -22,7 +23,6 @@ public class Verification extends Timestamp {
     private Long id;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(nullable = false, unique = true)

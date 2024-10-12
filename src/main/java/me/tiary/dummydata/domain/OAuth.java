@@ -1,7 +1,9 @@
 package me.tiary.dummydata.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import me.tiary.dummydata.domain.common.Timestamp;
 
 import java.util.UUID;
@@ -9,8 +11,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "oauth")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class OAuth extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,6 @@ public class OAuth extends Timestamp {
     private Profile profile;
 
     @Column(columnDefinition = "char(36)", nullable = false, unique = true)
-    @EqualsAndHashCode.Include
     private String uuid;
 
     @Column(nullable = false, unique = true)
