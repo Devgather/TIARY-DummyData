@@ -9,3 +9,8 @@ runner:
       enabled: true
       rows: 1000000
       batch-size: 10000
+
+    verification:
+      enabled: true
+      rows: 1000000
+      batch-size: 10000
