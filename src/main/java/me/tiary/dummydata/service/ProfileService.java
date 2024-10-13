@@ -30,6 +30,10 @@ public class ProfileService {
         return profileRepository.findById(id);
     }
 
+    public Optional<Profile> findWithOAuthById(final long id) {
+        return profileRepository.findLeftJoinFetchOAuthById(id);
+    }
+
     public void insertProfiles(final List<Profile> profiles) {
         transactionTemplate.executeWithoutResult(status -> {
             try {
