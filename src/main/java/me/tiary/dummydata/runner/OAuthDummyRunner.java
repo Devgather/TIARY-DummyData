@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.Optional;
 @Order(4)
 @Slf4j
 public final class OAuthDummyRunner implements CommandLineRunner {
-    private final long rows;
+    private final Range<Long> rowsRangePerProfile;
 
     private final long batchSize;
 
@@ -32,12 +34,12 @@ public final class OAuthDummyRunner implements CommandLineRunner {
 
     private final Faker faker;
 
-    public OAuthDummyRunner(@Value("${runner.dummy.oauth.rows}") final long rows,
+    public OAuthDummyRunner(@Value("${runner.dummy.oauth.rows-range-per-profile}") final Range<Long> rowsRangePerProfile,
                             @Value("${runner.dummy.oauth.batch-size}") final long batchSize,
                             final OAuthService oAuthService,
                             final ProfileService profileService,
                             final Faker faker) {
-        this.rows = rows;
+        this.rowsRangePerProfile = rowsRangePerProfile;
         this.batchSize = batchSize;
         this.oAuthService = oAuthService;
         this.profileService = profileService;
@@ -45,10 +47,10 @@ public final class OAuthDummyRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... args) {
-        if (rows <= 0) {
-            throw new IllegalStateException("OAuthDummyRunner requires at least 1 row");
-        }
+    public void run(final String... args) throws Exception {
+//        if (rowsRangePerProfile <= 0) {
+//            throw new IllegalStateException("OAuthDummyRunner requires at least 1 row");
+//        }
 
         if (batchSize <= 0) {
             throw new IllegalStateException("OAuthDummyRunner requires at least 1 batch size");
@@ -56,23 +58,28 @@ public final class OAuthDummyRunner implements CommandLineRunner {
 
         final long profileMinimumId = profileService.findProfileMinimumId();
         final List<OAuth> oAuths = new ArrayList<>();
-        long row = 0L;
+        long profileRow = 0L;
+        long oAuthRow = 0L;
 
         while (true) {
-            final Optional<Profile> profile = profileService.findWithOAuthById(profileMinimumId + row);
+            final Optional<Profile> profile = profileService.findWithOAuthById(profileMinimumId + profileRow++);
 
             if (profile.isPresent()) {
-                final OAuth oAuth = OAuth.builder()
-                        .profile(profile.get())
-                        .identifier(generateUniqueIdentifier(row))
-                        .provider(generateProvider())
-                        .build();
+                final long oAuthRows = SecureRandom.getInstanceStrong().nextLong(rowsRangePerProfile.getUpperBound().getValue().get() - rowsRangePerProfile.getLowerBound().getValue().get() + 1) + rowsRangePerProfile.getLowerBound().getValue().get();
 
-                oAuths.add(oAuth);
-                row++;
+                for (long row = 0L; row < oAuthRows; row++) {
+                    final OAuth oAuth = OAuth.builder()
+                            .profile(profile.get())
+                            .identifier(generateUniqueIdentifier(oAuthRow))
+                            .provider(generateProvider())
+                            .build();
+
+                    oAuths.add(oAuth);
+                    oAuthRow++;
+                }
             }
 
-            if (oAuths.size() >= batchSize || row >= rows || profile.isEmpty()) {
+            if (oAuths.size() >= batchSize || profile.isEmpty()) {
                 try {
                     oAuthService.insertOAuths(oAuths);
                     log.info("Inserted dummy OAuths: {} rows", NumberFormat.getInstance().format(oAuths.size()));
@@ -82,13 +89,13 @@ public final class OAuthDummyRunner implements CommandLineRunner {
                 }
             }
 
-            if (row >= rows) {
-                log.info("Finished dummy OAuths insertion: {} rows", NumberFormat.getInstance().format(row));
-                break;
-            }
+//            if (profileRow >= rowsRangePerProfile) {
+//                log.info("Finished dummy OAuths insertion: {} rows", NumberFormat.getInstance().format(profileRow));
+//                break;
+//            }
 
             if (profile.isEmpty()) {
-                log.info("Finished dummy OAuths insertion: Fewer Profiles than OAuths to insert: {} rows", NumberFormat.getInstance().format(row));
+                log.info("Finished dummy OAuths insertion: Fewer Profiles than OAuths to insert: {} rows", NumberFormat.getInstance().format(oAuthRow));
                 break;
             }
         }

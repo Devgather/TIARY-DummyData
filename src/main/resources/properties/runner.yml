@@ -2,20 +2,20 @@ runner:
   dummy:
     profile:
       enabled: true
-      rows: 1000000
+      rows: 100
       batch-size: 10000
 
     account:
-      enabled: true
+      enabled: false
       rows: 1000000
       batch-size: 10000
 
     verification:
-      enabled: true
+      enabled: false
       rows: 1000000
       batch-size: 10000
 
     oauth:
       enabled: true
-      rows: 1000000
+      rows-range-per-profile: 1-5
       batch-size: 10000
