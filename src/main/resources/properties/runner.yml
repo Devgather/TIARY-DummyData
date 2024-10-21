@@ -17,5 +17,5 @@ runner:
 
     oauth:
       enabled: true
-      rows: 1000000
+      rows-range-per-profile: 1-1
       batch-size: 10000
