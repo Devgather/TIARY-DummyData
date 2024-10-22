@@ -19,3 +19,8 @@ runner:
       enabled: true
       rows-range-per-profile: 1-1
       batch-size: 10000
+
+    til:
+      enabled: true
+      rows-range-per-profile: 0-100
+      batch-size: 10000

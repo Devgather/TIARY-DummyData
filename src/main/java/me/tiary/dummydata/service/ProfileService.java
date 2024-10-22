@@ -34,6 +34,10 @@ public class ProfileService {
         return profileRepository.findLeftJoinFetchOAuthById(id);
     }
 
+    public Optional<Profile> findWithTilById(final long id) {
+        return profileRepository.findLeftJoinFetchTilById(id);
+    }
+
     public void insertProfiles(final List<Profile> profiles) {
         transactionTemplate.executeWithoutResult(status -> {
             try {

@@ -13,5 +13,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("select p from Profile p left join fetch p.oAuths where p.id = :id")
     Optional<Profile> findLeftJoinFetchOAuthById(@Param("id") final Long id);
 
+    @Query("select p from Profile p left join fetch p.tils where p.id = :id")
+    Optional<Profile> findLeftJoinFetchTilById(@Param("id") final Long id);
+
     Optional<Profile> findFirstByOrderByIdAsc();
 }
