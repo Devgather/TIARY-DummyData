@@ -31,6 +31,14 @@ public final class ProfileDummyRunner implements CommandLineRunner {
                               @Value("${runner.dummy.profile.batch-size}") final long batchSize,
                               final ProfileService profileService,
                               final Faker faker) {
+        if (rows <= 0) {
+            throw new IllegalArgumentException("ProfileDummyRunner requires at least 1 row");
+        }
+
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("ProfileDummyRunner requires at least 1 batch size");
+        }
+
         this.rows = rows;
         this.batchSize = batchSize;
         this.profileService = profileService;
@@ -39,14 +47,6 @@ public final class ProfileDummyRunner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) {
-        if (rows <= 0) {
-            throw new IllegalStateException("ProfileDummyRunner requires at least 1 row");
-        }
-
-        if (batchSize <= 0) {
-            throw new IllegalStateException("ProfileDummyRunner requires at least 1 batch size");
-        }
-
         final List<Profile> profiles = new ArrayList<>();
         long row = 0L;
 

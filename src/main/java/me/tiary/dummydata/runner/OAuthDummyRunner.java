@@ -40,6 +40,10 @@ public final class OAuthDummyRunner implements CommandLineRunner {
                             final OAuthService oAuthService,
                             final ProfileService profileService,
                             final Faker faker) {
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("OAuthDummyRunner requires at least 1 batch size");
+        }
+
         this.rowsRangePerProfile = rowsRangePerProfile;
         this.batchSize = batchSize;
         this.oAuthService = oAuthService;
@@ -49,10 +53,6 @@ public final class OAuthDummyRunner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) throws Exception {
-        if (batchSize <= 0) {
-            throw new IllegalStateException("OAuthDummyRunner requires at least 1 batch size");
-        }
-
         final long profileMinimumId = profileService.findProfileMinimumId();
         final List<OAuth> oAuths = new ArrayList<>();
         long profileRow = 0L;

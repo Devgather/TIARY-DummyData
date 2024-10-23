@@ -32,6 +32,14 @@ public final class VerificationDummyRunner implements CommandLineRunner {
                                    @Value("${runner.dummy.verification.batch-size}") final long batchSize,
                                    final VerificationService verificationService,
                                    final Faker faker) {
+        if (rows <= 0) {
+            throw new IllegalArgumentException("VerificationDummyRunner requires at least 1 row");
+        }
+
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("VerificationDummyRunner requires at least 1 batch size");
+        }
+
         this.rows = rows;
         this.batchSize = batchSize;
         this.verificationService = verificationService;
@@ -40,14 +48,6 @@ public final class VerificationDummyRunner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) throws Exception {
-        if (rows <= 0) {
-            throw new IllegalStateException("VerificationDummyRunner requires at least 1 row");
-        }
-
-        if (batchSize <= 0) {
-            throw new IllegalStateException("VerificationDummyRunner requires at least 1 batch size");
-        }
-
         final List<Verification> verifications = new ArrayList<>();
         long row = 0L;
 

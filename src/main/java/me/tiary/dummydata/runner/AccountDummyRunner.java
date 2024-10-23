@@ -37,6 +37,14 @@ public final class AccountDummyRunner implements CommandLineRunner {
                               final AccountService accountService,
                               final ProfileService profileService,
                               final Faker faker) {
+        if (rows <= 0) {
+            throw new IllegalArgumentException("AccountDummyRunner requires at least 1 row");
+        }
+
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("AccountDummyRunner requires at least 1 batch size");
+        }
+
         this.rows = rows;
         this.batchSize = batchSize;
         this.accountService = accountService;
@@ -46,14 +54,6 @@ public final class AccountDummyRunner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) {
-        if (rows <= 0) {
-            throw new IllegalStateException("AccountDummyRunner requires at least 1 row");
-        }
-
-        if (batchSize <= 0) {
-            throw new IllegalStateException("AccountDummyRunner requires at least 1 batch size");
-        }
-
         final long profileMinimumId = profileService.findProfileMinimumId();
         final List<Account> accounts = new ArrayList<>();
         long row = 0L;

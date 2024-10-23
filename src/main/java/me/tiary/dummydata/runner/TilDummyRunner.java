@@ -40,6 +40,10 @@ public final class TilDummyRunner implements CommandLineRunner {
                           final TilService tilService,
                           final ProfileService profileService,
                           final Faker faker) {
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("TilDummyRunner requires at least 1 batch size");
+        }
+
         this.rowsRangePerProfile = rowsRangePerProfile;
         this.batchSize = batchSize;
         this.tilService = tilService;
@@ -49,10 +53,6 @@ public final class TilDummyRunner implements CommandLineRunner {
 
     @Override
     public void run(final String... args) throws Exception {
-        if (batchSize <= 0) {
-            throw new IllegalStateException("TilDummyRunner requires at least 1 batch size");
-        }
-
         final long profileMinimumId = profileService.findProfileMinimumId();
         final List<Til> tils = new ArrayList<>();
         long profileRow = 0L;
