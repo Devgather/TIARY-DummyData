@@ -29,3 +29,8 @@ runner:
       enabled: true
       rows: 1000000
       batch-size: 10000
+
+    til-tag:
+      enabled: true
+      rows-range-per-til: 0-10
+      batch-size: 10000

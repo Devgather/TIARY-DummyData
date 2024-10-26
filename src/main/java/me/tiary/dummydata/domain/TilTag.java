@@ -17,7 +17,8 @@ import java.util.UUID;
 @Builder
 public class TilTag extends Timestamp {
     @EmbeddedId
-    private TilTagId id;
+    @Builder.Default
+    private TilTagId id = new TilTagId();
 
     @JoinColumn(name = "til_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)

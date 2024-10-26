@@ -2,7 +2,6 @@ package me.tiary.dummydata.domain.composite;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class TilTagId implements Serializable {
