@@ -13,12 +13,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Component
 @ConditionalOnProperty(prefix = "runner.dummy.til", name = "enabled")
@@ -62,8 +60,7 @@ public final class TilDummyRunner implements CommandLineRunner {
             final Optional<Profile> profile = profileService.findWithTilById(profileMinimumId + profileRow++);
 
             if (profile.isPresent()) {
-                final Random random = SecureRandom.getInstanceStrong();
-                final long tilRows = random.nextLong(rowsRangePerProfile.upperBound() - rowsRangePerProfile.lowerBound() + 1) + rowsRangePerProfile.lowerBound();
+                final long tilRows = rowsRangePerProfile.generateRandomValue();
 
                 for (long row = 0L; row < tilRows; row++) {
                     final Til til = Til.builder()
