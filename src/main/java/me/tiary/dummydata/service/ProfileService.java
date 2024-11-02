@@ -26,16 +26,24 @@ public class ProfileService {
         return -1L;
     }
 
-    public Optional<Profile> findById(final long id) {
-        return profileRepository.findById(id);
-    }
-
     public Optional<Profile> findWithOAuthById(final long id) {
         return profileRepository.findLeftJoinFetchOAuthById(id);
     }
 
     public Optional<Profile> findWithTilById(final long id) {
         return profileRepository.findLeftJoinFetchTilById(id);
+    }
+
+    public Optional<Profile> findFirstProfile() {
+        return profileRepository.findFirstByOrderByIdAsc();
+    }
+
+    public Optional<Profile> findNextProfile(final Profile currentProfile) {
+        if (currentProfile == null) {
+            return Optional.empty();
+        }
+
+        return profileRepository.findNextByPreviousId(currentProfile.getId());
     }
 
     public void insertProfiles(final List<Profile> profiles) {
