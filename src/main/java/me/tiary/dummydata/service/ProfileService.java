@@ -39,10 +39,6 @@ public class ProfileService {
         return profileRepository.findById(id);
     }
 
-    public Optional<Profile> findWithOAuthById(final long id) {
-        return profileRepository.findLeftJoinFetchOAuthById(id);
-    }
-
     public Optional<Profile> findWithTilById(final long id) {
         return profileRepository.findLeftJoinFetchTilById(id);
     }
