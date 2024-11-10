@@ -7,6 +7,8 @@ import me.tiary.dummydata.domain.Verification;
 import me.tiary.dummydata.service.VerificationService;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,6 +22,7 @@ public class VerificationGenerator {
 
     private final Faker faker;
 
+    @Transactional
     @EntityGenerationLogging(entity = "Verification")
     public long generateVerifications(final long rows, final long batchSize) throws NoSuchAlgorithmException {
         final List<Verification> verifications = new ArrayList<>();
@@ -65,6 +68,7 @@ public class VerificationGenerator {
     public static class VerificationHandler {
         private final VerificationService verificationService;
 
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Verification")
         public void insertVerifications(final List<Verification> verifications) {
             verificationService.insertVerifications(verifications);
