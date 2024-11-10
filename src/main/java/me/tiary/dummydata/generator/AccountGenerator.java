@@ -9,6 +9,8 @@ import me.tiary.dummydata.service.AccountService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class AccountGenerator {
 
     private final Faker faker;
 
+    @Transactional
     @EntityGenerationLogging(entity = "Account")
     public long generateAccounts(final long rows, final long batchSize) {
         final List<Account> accounts = new ArrayList<>();
@@ -68,6 +71,7 @@ public class AccountGenerator {
     public static class AccountHandler {
         private final AccountService accountService;
 
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Account")
         public void insertAccounts(final List<Account> accounts) {
             accountService.insertAccounts(accounts);
