@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import me.tiary.dummydata.domain.common.Timestamp;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,21 +30,6 @@ public class Profile extends Timestamp {
     @Column(nullable = false)
     private String picture;
 
-    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
-    private Account account;
-
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<OAuth> oAuths = new ArrayList<>();
-
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Til> tils = new ArrayList<>();
-
-    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Comment> comments = new ArrayList<>();
-
     @PrePersist
     private void prePersist() {
         createUuid();
@@ -54,9 +37,5 @@ public class Profile extends Timestamp {
 
     public void createUuid() {
         this.uuid = UUID.randomUUID().toString();
-    }
-
-    void setAccount(final Account account) {
-        this.account = account;
     }
 }
