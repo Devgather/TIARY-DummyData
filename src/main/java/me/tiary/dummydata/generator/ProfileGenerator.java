@@ -7,6 +7,8 @@ import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.service.ProfileService;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class ProfileGenerator {
 
     private final Faker faker;
 
+    @Transactional
     @EntityGenerationLogging(entity = "Profile")
     public long generateProfiles(final long rows, final long batchSize) {
         final List<Profile> profiles = new ArrayList<>();
@@ -58,6 +61,7 @@ public class ProfileGenerator {
     public static class ProfileHandler {
         private final ProfileService profileService;
 
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Profile")
         public void insertProfiles(final List<Profile> profiles) {
             profileService.insertProfiles(profiles);

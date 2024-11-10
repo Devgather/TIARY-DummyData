@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +11,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
-    private final TransactionTemplate transactionTemplate;
-
     private final ProfileRepository profileRepository;
 
     public long findProfileMinimumId() {
@@ -47,13 +44,6 @@ public class ProfileService {
     }
 
     public void insertProfiles(final List<Profile> profiles) {
-        transactionTemplate.executeWithoutResult(status -> {
-            try {
-                profileRepository.saveAllAndFlush(profiles);
-            } catch (final Exception ex) {
-                status.setRollbackOnly();
-                throw ex;
-            }
-        });
+        profileRepository.saveAll(profiles);
     }
 }
