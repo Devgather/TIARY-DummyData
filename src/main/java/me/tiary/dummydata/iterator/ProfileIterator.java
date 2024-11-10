@@ -1,5 +1,6 @@
 package me.tiary.dummydata.iterator;
 
+import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.service.ProfileService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,11 +15,14 @@ import java.util.NoSuchElementException;
 public final class ProfileIterator implements Iterator<Profile> {
     private final ProfileService profileService;
 
+    private final Range profileIdRange;
+
     private Profile currentProfile;
 
     public ProfileIterator(final ProfileService profileService) {
         this.profileService = profileService;
-        this.currentProfile = profileService.findFirstProfile().orElse(null);
+        this.profileIdRange = profileService.findProfileIdRange();
+        this.currentProfile = findNext(profileIdRange.lowerBound() - 1);
     }
 
     @Override
@@ -33,8 +37,20 @@ public final class ProfileIterator implements Iterator<Profile> {
         }
 
         final Profile result = currentProfile;
-        currentProfile = profileService.findNextProfile(result).orElse(null);
+        currentProfile = findNext(result.getId());
 
         return result;
+    }
+
+    private Profile findNext(final long currentId) {
+        Profile next = null;
+        long nextId = currentId + 1;
+
+        while (next == null && nextId <= profileIdRange.upperBound()) {
+            next = profileService.findById(nextId).orElse(null);
+            nextId++;
+        }
+
+        return next;
     }
 }

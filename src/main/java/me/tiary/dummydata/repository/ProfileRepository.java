@@ -18,6 +18,5 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     Optional<Profile> findFirstByOrderByIdAsc();
 
-    @Query("select p from Profile p where p.id > :previousId order by p.id asc limit 1")
-    Optional<Profile> findNextByPreviousId(@Param("previousId") final Long previousId);
+    Optional<Profile> findFirstByOrderByIdDesc();
 }
