@@ -14,16 +14,6 @@ import java.util.Optional;
 public class ProfileService {
     private final ProfileRepository profileRepository;
 
-    public long findProfileMinimumId() {
-        final Optional<Profile> firstProfile = profileRepository.findFirstByOrderByIdAsc();
-
-        if (firstProfile.isPresent()) {
-            return firstProfile.get().getId();
-        }
-
-        return -1L;
-    }
-
     public Range findProfileIdRange() {
         final Optional<Profile> firstProfile = profileRepository.findFirstByOrderByIdAsc();
         final Optional<Profile> lastProfile = profileRepository.findFirstByOrderByIdDesc();
@@ -37,10 +27,6 @@ public class ProfileService {
 
     public Optional<Profile> findById(final long id) {
         return profileRepository.findById(id);
-    }
-
-    public Optional<Profile> findWithTilById(final long id) {
-        return profileRepository.findLeftJoinFetchTilById(id);
     }
 
     public void insertProfiles(final List<Profile> profiles) {
