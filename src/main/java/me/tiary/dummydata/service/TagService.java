@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.domain.Tag;
 import me.tiary.dummydata.repository.TagRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +11,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TagService {
-    private final TransactionTemplate transactionTemplate;
-
     private final TagRepository tagRepository;
 
     public long findTagMinimumId() {
@@ -41,13 +38,6 @@ public class TagService {
     }
 
     public void insertTags(final List<Tag> tags) {
-        transactionTemplate.executeWithoutResult(status -> {
-            try {
-                tagRepository.saveAllAndFlush(tags);
-            } catch (final Exception ex) {
-                status.setRollbackOnly();
-                throw ex;
-            }
-        });
+        tagRepository.saveAll(tags);
     }
 }

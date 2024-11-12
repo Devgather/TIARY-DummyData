@@ -1,36 +1,25 @@
 package me.tiary.dummydata.runner;
 
-import lombok.extern.slf4j.Slf4j;
-import me.tiary.dummydata.domain.Tag;
-import me.tiary.dummydata.service.TagService;
-import net.datafaker.Faker;
+import me.tiary.dummydata.generator.TagGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 @ConditionalOnProperty(prefix = "runner.dummy.tag", name = "enabled")
 @Order(6)
-@Slf4j
 public final class TagDummyRunner implements CommandLineRunner {
     private final long rows;
 
     private final long batchSize;
 
-    private final TagService tagService;
-
-    private final Faker faker;
+    private final TagGenerator tagGenerator;
 
     public TagDummyRunner(@Value("${runner.dummy.tag.rows}") final long rows,
                           @Value("${runner.dummy.tag.batch-size}") final long batchSize,
-                          final TagService tagService,
-                          final Faker faker) {
+                          final TagGenerator tagGenerator) {
         if (rows <= 0) {
             throw new IllegalArgumentException("TagDummyRunner requires at least 1 row");
         }
@@ -41,41 +30,11 @@ public final class TagDummyRunner implements CommandLineRunner {
 
         this.rows = rows;
         this.batchSize = batchSize;
-        this.tagService = tagService;
-        this.faker = faker;
+        this.tagGenerator = tagGenerator;
     }
 
     @Override
     public void run(final String... args) {
-        final List<Tag> tags = new ArrayList<>();
-        long row = 0L;
-
-        while (true) {
-            final Tag tag = Tag.builder()
-                    .name(generateUniqueName(row))
-                    .build();
-
-            tags.add(tag);
-            row++;
-
-            if (tags.size() >= batchSize || row >= rows) {
-                try {
-                    tagService.insertTags(tags);
-                    log.info("Inserted dummy Tags: {} rows", NumberFormat.getInstance().format(tags.size()));
-                    tags.clear();
-                } catch (final Exception ex) {
-                    log.error("Failed to insert dummy Tags: {}", ex.getMessage());
-                }
-            }
-
-            if (row >= rows) {
-                log.info("Finished dummy Tags insertion: {} rows", NumberFormat.getInstance().format(row));
-                break;
-            }
-        }
-    }
-
-    private String generateUniqueName(final long row) {
-        return faker.lorem().word() + row;
+        tagGenerator.generateTags(rows, batchSize);
     }
 }
