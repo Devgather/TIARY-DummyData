@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface TilRepository extends JpaRepository<Til, Long> {
     Optional<Til> findFirstByOrderByIdAsc();
+
+    Optional<Til> findFirstByOrderByIdDesc();
 }

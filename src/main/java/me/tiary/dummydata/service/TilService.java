@@ -1,6 +1,7 @@
 package me.tiary.dummydata.service;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.repository.TilRepository;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,15 @@ import java.util.Optional;
 public class TilService {
     private final TilRepository tilRepository;
 
-    public long findTilMinimumId() {
+    public Range findTilIdRange() {
         final Optional<Til> firstTil = tilRepository.findFirstByOrderByIdAsc();
+        final Optional<Til> lastTil = tilRepository.findFirstByOrderByIdDesc();
 
-        if (firstTil.isPresent()) {
-            return firstTil.get().getId();
+        if (firstTil.isPresent() && lastTil.isPresent()) {
+            return new Range(firstTil.get().getId(), lastTil.get().getId());
         }
 
-        return -1L;
+        return new Range(-1L, -1L);
     }
 
     public Optional<Til> findById(final long id) {

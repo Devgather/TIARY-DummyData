@@ -1,6 +1,7 @@
 package me.tiary.dummydata.service;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Tag;
 import me.tiary.dummydata.repository.TagRepository;
 import org.springframework.stereotype.Service;
@@ -13,24 +14,15 @@ import java.util.Optional;
 public class TagService {
     private final TagRepository tagRepository;
 
-    public long findTagMinimumId() {
+    public Range findTagIdRange() {
         final Optional<Tag> firstTag = tagRepository.findFirstByOrderByIdAsc();
-
-        if (firstTag.isPresent()) {
-            return firstTag.get().getId();
-        }
-
-        return -1L;
-    }
-
-    public long findTagMaximumId() {
         final Optional<Tag> lastTag = tagRepository.findFirstByOrderByIdDesc();
 
-        if (lastTag.isPresent()) {
-            return lastTag.get().getId();
+        if (firstTag.isPresent() && lastTag.isPresent()) {
+            return new Range(firstTag.get().getId(), lastTag.get().getId());
         }
 
-        return -1L;
+        return new Range(-1L, -1L);
     }
 
     public Optional<Tag> findById(final long id) {
