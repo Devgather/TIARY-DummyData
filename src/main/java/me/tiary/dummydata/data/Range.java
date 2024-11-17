@@ -18,6 +18,14 @@ public record Range(long lowerBound, long upperBound) {
         return random.nextLong(upperBound - lowerBound + 1) + lowerBound;
     }
 
+    public List<Long> generateRandomValues(final long size) throws NoSuchAlgorithmException {
+        final Random random = SecureRandom.getInstanceStrong();
+
+        return random.longs(size, lowerBound, upperBound + 1)
+                .boxed()
+                .toList();
+    }
+
     public List<Long> generateUniqueRandomValues(final long size) throws NoSuchAlgorithmException {
         final Random random = SecureRandom.getInstanceStrong();
 

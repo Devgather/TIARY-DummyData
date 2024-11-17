@@ -34,3 +34,8 @@ runner:
       enabled: true
       rows-range-per-til: 0-10
       batch-size: 10000
+
+    comment:
+      enabled: true
+      rows-range-per-til: 0-10
+      batch-size: 10000
