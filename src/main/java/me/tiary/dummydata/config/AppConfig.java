@@ -6,8 +6,6 @@ import net.datafaker.Faker;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.beans.PropertyEditor;
 import java.util.HashMap;
@@ -24,11 +22,6 @@ public class AppConfig {
         editorConfigurer.setCustomEditors(customEditors);
 
         return editorConfigurer;
-    }
-
-    @Bean
-    public TransactionTemplate transactionTemplate(final PlatformTransactionManager transactionManager) {
-        return new TransactionTemplate(transactionManager);
     }
 
     @Bean
