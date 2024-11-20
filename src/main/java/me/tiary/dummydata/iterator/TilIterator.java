@@ -1,8 +1,8 @@
 package me.tiary.dummydata.iterator;
 
+import me.tiary.dummydata.accessor.TilAccessor;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Til;
-import me.tiary.dummydata.service.TilService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,15 +13,15 @@ import java.util.NoSuchElementException;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public final class TilIterator implements Iterator<Til> {
-    private final TilService tilService;
+    private final TilAccessor tilAccessor;
 
     private final Range tilIdRange;
 
     private Til currentTil;
 
-    public TilIterator(final TilService tilService) {
-        this.tilService = tilService;
-        this.tilIdRange = tilService.findTilIdRange();
+    public TilIterator(final TilAccessor tilAccessor) {
+        this.tilAccessor = tilAccessor;
+        this.tilIdRange = tilAccessor.findTilIdRange();
         this.currentTil = findNext(tilIdRange.lowerBound() - 1);
     }
 
@@ -47,7 +47,7 @@ public final class TilIterator implements Iterator<Til> {
         long nextId = currentId + 1;
 
         while (next == null && nextId <= tilIdRange.upperBound()) {
-            next = tilService.findById(nextId).orElse(null);
+            next = tilAccessor.findById(nextId).orElse(null);
             nextId++;
         }
 

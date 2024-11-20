@@ -1,8 +1,8 @@
 package me.tiary.dummydata.iterator;
 
+import me.tiary.dummydata.accessor.ProfileAccessor;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Profile;
-import me.tiary.dummydata.service.ProfileService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -13,15 +13,15 @@ import java.util.NoSuchElementException;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public final class ProfileIterator implements Iterator<Profile> {
-    private final ProfileService profileService;
+    private final ProfileAccessor profileAccessor;
 
     private final Range profileIdRange;
 
     private Profile currentProfile;
 
-    public ProfileIterator(final ProfileService profileService) {
-        this.profileService = profileService;
-        this.profileIdRange = profileService.findProfileIdRange();
+    public ProfileIterator(final ProfileAccessor profileAccessor) {
+        this.profileAccessor = profileAccessor;
+        this.profileIdRange = profileAccessor.findProfileIdRange();
         this.currentProfile = findNext(profileIdRange.lowerBound() - 1);
     }
 
@@ -47,7 +47,7 @@ public final class ProfileIterator implements Iterator<Profile> {
         long nextId = currentId + 1;
 
         while (next == null && nextId <= profileIdRange.upperBound()) {
-            next = profileService.findById(nextId).orElse(null);
+            next = profileAccessor.findById(nextId).orElse(null);
             nextId++;
         }
 

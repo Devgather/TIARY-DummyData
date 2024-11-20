@@ -1,10 +1,10 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.ProfileAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.domain.Profile;
-import me.tiary.dummydata.service.ProfileService;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -59,12 +59,12 @@ public class ProfileGenerator {
     @Component
     @RequiredArgsConstructor
     public static class ProfileHandler {
-        private final ProfileService profileService;
+        private final ProfileAccessor profileAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Profile")
         public void insertProfiles(final List<Profile> profiles) {
-            profileService.insertProfiles(profiles);
+            profileAccessor.insertProfiles(profiles);
         }
     }
 }

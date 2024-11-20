@@ -1,10 +1,10 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.VerificationAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.domain.Verification;
-import me.tiary.dummydata.service.VerificationService;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -66,12 +66,12 @@ public class VerificationGenerator {
     @Component
     @RequiredArgsConstructor
     public static class VerificationHandler {
-        private final VerificationService verificationService;
+        private final VerificationAccessor verificationAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Verification")
         public void insertVerifications(final List<Verification> verifications) {
-            verificationService.insertVerifications(verifications);
+            verificationAccessor.insertVerifications(verifications);
         }
     }
 }

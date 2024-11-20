@@ -1,10 +1,10 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.TagAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.domain.Tag;
-import me.tiary.dummydata.service.TagService;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -54,12 +54,12 @@ public class TagGenerator {
     @Component
     @RequiredArgsConstructor
     public static class TagHandler {
-        private final TagService tagService;
+        private final TagAccessor tagAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Tag")
         public void insertTags(final List<Tag> tags) {
-            tagService.insertTags(tags);
+            tagAccessor.insertTags(tags);
         }
     }
 }

@@ -1,13 +1,13 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.OAuthAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.OAuth;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.iterator.ProfileIterator;
-import me.tiary.dummydata.service.OAuthService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -75,12 +75,12 @@ public class OAuthGenerator {
     @Component
     @RequiredArgsConstructor
     public static class OAuthHandler {
-        private final OAuthService oAuthService;
+        private final OAuthAccessor oAuthAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "OAuth")
         public void insertOAuths(final List<OAuth> oAuths) {
-            oAuthService.insertOAuths(oAuths);
+            oAuthAccessor.insertOAuths(oAuths);
         }
     }
 }

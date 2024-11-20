@@ -1,15 +1,15 @@
-package me.tiary.dummydata.service;
+package me.tiary.dummydata.accessor;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.domain.OAuth;
 import me.tiary.dummydata.repository.OAuthRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class OAuthService {
+public class OAuthAccessor {
     private final OAuthRepository oAuthRepository;
 
     public void insertOAuths(final List<OAuth> oAuths) {

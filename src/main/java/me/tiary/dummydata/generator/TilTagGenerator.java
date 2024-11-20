@@ -1,6 +1,8 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.TagAccessor;
+import me.tiary.dummydata.accessor.TilTagAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.data.Range;
@@ -8,8 +10,6 @@ import me.tiary.dummydata.domain.Tag;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.domain.TilTag;
 import me.tiary.dummydata.iterator.TilIterator;
-import me.tiary.dummydata.service.TagService;
-import me.tiary.dummydata.service.TilTagService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,14 +27,14 @@ public class TilTagGenerator {
 
     private final ObjectProvider<TilIterator> tilIteratorProvider;
 
-    private final TagService tagService;
+    private final TagAccessor tagAccessor;
 
     @Transactional
     @EntityGenerationLogging(entity = "TilTag")
     public long generateTilTags(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
         final List<TilTag> tilTags = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorProvider.getObject();
-        final Range tagIdRange = tagService.findTagIdRange();
+        final Range tagIdRange = tagAccessor.findTagIdRange();
         long totalRows = 0L;
 
         while (tilIterator.hasNext()) {
@@ -42,7 +42,7 @@ public class TilTagGenerator {
             final List<Long> tagIds = tagIdRange.generateUniqueRandomValues(rowsRangePerTil.generateRandomValue());
 
             for (final long tagId : tagIds) {
-                final Optional<Tag> tag = tagService.findById(tagId);
+                final Optional<Tag> tag = tagAccessor.findById(tagId);
 
                 if (tag.isPresent()) {
                     final TilTag tilTag = TilTag.builder()
@@ -72,12 +72,12 @@ public class TilTagGenerator {
     @Component
     @RequiredArgsConstructor
     public static class TilTagHandler {
-        private final TilTagService tilTagService;
+        private final TilTagAccessor tilTagAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "TilTag")
         public void insertTilTags(final List<TilTag> tilTags) {
-            tilTagService.insertTilTags(tilTags);
+            tilTagAccessor.insertTilTags(tilTags);
         }
     }
 }

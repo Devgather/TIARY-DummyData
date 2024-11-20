@@ -1,6 +1,8 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.CommentAccessor;
+import me.tiary.dummydata.accessor.ProfileAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.data.Range;
@@ -8,8 +10,6 @@ import me.tiary.dummydata.domain.Comment;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.iterator.TilIterator;
-import me.tiary.dummydata.service.CommentService;
-import me.tiary.dummydata.service.ProfileService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class CommentGenerator {
 
     private final ObjectProvider<TilIterator> tilIteratorProvider;
 
-    private final ProfileService profileService;
+    private final ProfileAccessor profileAccessor;
 
     private final Faker faker;
 
@@ -37,7 +37,7 @@ public class CommentGenerator {
     public long generateComments(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
         final List<Comment> comments = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorProvider.getObject();
-        final Range profileIdRange = profileService.findProfileIdRange();
+        final Range profileIdRange = profileAccessor.findProfileIdRange();
         long totalRows = 0L;
 
         while (tilIterator.hasNext()) {
@@ -45,7 +45,7 @@ public class CommentGenerator {
             final List<Long> profileIds = profileIdRange.generateRandomValues(rowsRangePerTil.generateRandomValue());
 
             for (final long profileId : profileIds) {
-                final Optional<Profile> profile = profileService.findById(profileId);
+                final Optional<Profile> profile = profileAccessor.findById(profileId);
 
                 if (profile.isPresent()) {
                     final Comment comment = Comment.builder()
@@ -80,12 +80,12 @@ public class CommentGenerator {
     @Component
     @RequiredArgsConstructor
     public static class CommentHandler {
-        private final CommentService commentService;
+        private final CommentAccessor commentAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Comment")
         public void insertComments(final List<Comment> comments) {
-            commentService.insertComments(comments);
+            commentAccessor.insertComments(comments);
         }
     }
 }

@@ -1,15 +1,15 @@
-package me.tiary.dummydata.service;
+package me.tiary.dummydata.accessor;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.domain.Verification;
 import me.tiary.dummydata.repository.VerificationRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class VerificationService {
+public class VerificationAccessor {
     private final VerificationRepository verificationRepository;
 
     public void insertVerifications(final List<Verification> verifications) {

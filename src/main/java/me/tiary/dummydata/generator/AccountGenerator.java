@@ -1,11 +1,11 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.AccountAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.domain.Account;
 import me.tiary.dummydata.iterator.ProfileIterator;
-import me.tiary.dummydata.service.AccountService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -69,12 +69,12 @@ public class AccountGenerator {
     @Component
     @RequiredArgsConstructor
     public static class AccountHandler {
-        private final AccountService accountService;
+        private final AccountAccessor accountAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Account")
         public void insertAccounts(final List<Account> accounts) {
-            accountService.insertAccounts(accounts);
+            accountAccessor.insertAccounts(accounts);
         }
     }
 }

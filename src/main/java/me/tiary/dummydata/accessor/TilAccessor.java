@@ -1,17 +1,17 @@
-package me.tiary.dummydata.service;
+package me.tiary.dummydata.accessor;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.repository.TilRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class TilService {
+public class TilAccessor {
     private final TilRepository tilRepository;
 
     public Range findTilIdRange() {

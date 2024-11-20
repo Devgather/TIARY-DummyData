@@ -1,13 +1,13 @@
 package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
+import me.tiary.dummydata.accessor.TilAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.iterator.ProfileIterator;
-import me.tiary.dummydata.service.TilService;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -75,12 +75,12 @@ public class TilGenerator {
     @Component
     @RequiredArgsConstructor
     public static class TilHandler {
-        private final TilService tilService;
+        private final TilAccessor tilAccessor;
 
         @Transactional(propagation = Propagation.REQUIRES_NEW)
         @EntityInsertionLogging(entity = "Til")
         public void insertTils(final List<Til> tils) {
-            tilService.insertTils(tils);
+            tilAccessor.insertTils(tils);
         }
     }
 }

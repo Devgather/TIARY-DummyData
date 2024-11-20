@@ -1,17 +1,17 @@
-package me.tiary.dummydata.service;
+package me.tiary.dummydata.accessor;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Tag;
 import me.tiary.dummydata.repository.TagRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class TagService {
+public class TagAccessor {
     private final TagRepository tagRepository;
 
     public Range findTagIdRange() {
