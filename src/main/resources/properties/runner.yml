@@ -22,7 +22,7 @@ runner:
 
     til:
       enabled: true
-      rows-range-per-profile: 0-100
+      rows-range-per-profile: 0-10
       batch-size: 10000
 
     tag:
@@ -32,10 +32,10 @@ runner:
 
     til-tag:
       enabled: true
-      rows-range-per-til: 0-10
+      rows-range-per-til: 0-5
       batch-size: 10000
 
     comment:
       enabled: true
-      rows-range-per-til: 0-10
+      rows-range-per-til: 0-5
       batch-size: 10000
