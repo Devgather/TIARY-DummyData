@@ -30,6 +30,6 @@ public class ProfileAccessor {
     }
 
     public void insertProfiles(final List<Profile> profiles) {
-        profileRepository.saveAll(profiles);
+        profileRepository.saveBatch(profiles);
     }
 }
