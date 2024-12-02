@@ -1,10 +1,7 @@
 package me.tiary.dummydata.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.tiary.dummydata.domain.common.Timestamp;
 import me.tiary.dummydata.domain.composite.TilTagId;
 
@@ -15,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class TilTag extends Timestamp {
     @EmbeddedId
     @Builder.Default

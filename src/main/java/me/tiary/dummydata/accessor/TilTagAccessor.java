@@ -13,6 +13,6 @@ public class TilTagAccessor {
     private final TilTagRepository tilTagRepository;
 
     public void insertTilTags(final List<TilTag> tilTags) {
-        tilTagRepository.saveAll(tilTags);
+        tilTagRepository.saveBatch(tilTags);
     }
 }
