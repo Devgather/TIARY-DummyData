@@ -30,6 +30,6 @@ public class TilAccessor {
     }
 
     public void insertTils(final List<Til> tils) {
-        tilRepository.saveAll(tils);
+        tilRepository.saveBatch(tils);
     }
 }
