@@ -30,6 +30,6 @@ public class TagAccessor {
     }
 
     public void insertTags(final List<Tag> tags) {
-        tagRepository.saveAll(tags);
+        tagRepository.saveBatch(tags);
     }
 }
