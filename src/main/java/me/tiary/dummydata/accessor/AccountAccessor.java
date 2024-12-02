@@ -13,6 +13,6 @@ public class AccountAccessor {
     private final AccountRepository accountRepository;
 
     public void insertAccounts(final List<Account> accounts) {
-        accountRepository.saveAll(accounts);
+        accountRepository.saveBatch(accounts);
     }
 }
