@@ -13,6 +13,6 @@ public class OAuthAccessor {
     private final OAuthRepository oAuthRepository;
 
     public void insertOAuths(final List<OAuth> oAuths) {
-        oAuthRepository.saveAll(oAuths);
+        oAuthRepository.saveBatch(oAuths);
     }
 }
