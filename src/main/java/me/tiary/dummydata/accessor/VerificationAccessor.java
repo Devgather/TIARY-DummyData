@@ -13,6 +13,6 @@ public class VerificationAccessor {
     private final VerificationRepository verificationRepository;
 
     public void insertVerifications(final List<Verification> verifications) {
-        verificationRepository.saveAll(verifications);
+        verificationRepository.saveBatch(verifications);
     }
 }
