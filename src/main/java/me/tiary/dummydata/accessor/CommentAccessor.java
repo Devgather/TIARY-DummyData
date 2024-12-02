@@ -13,6 +13,6 @@ public class CommentAccessor {
     private final CommentRepository commentRepository;
 
     public void insertComments(final List<Comment> comments) {
-        commentRepository.saveAll(comments);
+        commentRepository.saveBatch(comments);
     }
 }
