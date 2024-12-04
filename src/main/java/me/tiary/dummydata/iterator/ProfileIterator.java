@@ -62,6 +62,9 @@ public final class ProfileIterator implements Iterator<Profile> {
     }
 
     private Range calculateNextBatchIdRange(final long previousBatchUpperBoundId) {
-        return new Range(previousBatchUpperBoundId + 1, Math.min(previousBatchUpperBoundId + batchSize, profileIdRange.upperBound()));
+        return new Range(
+                Math.min(previousBatchUpperBoundId + 1, profileIdRange.upperBound() + 1),
+                Math.min(previousBatchUpperBoundId + batchSize, profileIdRange.upperBound() + 1)
+        );
     }
 }

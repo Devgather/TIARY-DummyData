@@ -62,6 +62,9 @@ public final class TilIterator implements Iterator<Til> {
     }
 
     private Range calculateNextBatchIdRange(final long previousBatchUpperBoundId) {
-        return new Range(previousBatchUpperBoundId + 1, Math.min(previousBatchUpperBoundId + batchSize, tilIdRange.upperBound()));
+        return new Range(
+                Math.min(previousBatchUpperBoundId + 1, tilIdRange.upperBound() + 1),
+                Math.min(previousBatchUpperBoundId + batchSize, tilIdRange.upperBound() + 1)
+        );
     }
 }
