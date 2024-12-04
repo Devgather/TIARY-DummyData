@@ -25,8 +25,12 @@ public class TilAccessor {
         return new Range(-1L, -1L);
     }
 
-    public Optional<Til> findById(final long id) {
-        return tilRepository.findById(id);
+    public List<Til> findAllByIdBetween(final long lowerBoundId, final long upperBoundId) {
+        return tilRepository.findAllByIdBetween(lowerBoundId, upperBoundId);
+    }
+
+    public List<Til> findAllByIdBetween(final Range idRange) {
+        return findAllByIdBetween(idRange.lowerBound(), idRange.upperBound());
     }
 
     public void insertTils(final List<Til> tils) {

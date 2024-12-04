@@ -10,7 +10,7 @@ import me.tiary.dummydata.domain.Tag;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.domain.TilTag;
 import me.tiary.dummydata.iterator.TilIterator;
-import org.springframework.beans.factory.ObjectProvider;
+import me.tiary.dummydata.iterator.factory.TilIteratorFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class TilTagGenerator {
     private final TilTagHandler tilTagHandler;
 
-    private final ObjectProvider<TilIterator> tilIteratorProvider;
+    private final TilIteratorFactory tilIteratorFactory;
 
     private final TagAccessor tagAccessor;
 
@@ -33,7 +33,7 @@ public class TilTagGenerator {
     @EntityGenerationLogging(entity = "TilTag")
     public long generateTilTags(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
         final List<TilTag> tilTags = new ArrayList<>();
-        final TilIterator tilIterator = tilIteratorProvider.getObject();
+        final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
         final Range tagIdRange = tagAccessor.findTagIdRange();
         long totalRows = 0L;
 

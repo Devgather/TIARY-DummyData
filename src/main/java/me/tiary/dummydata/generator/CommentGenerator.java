@@ -10,8 +10,8 @@ import me.tiary.dummydata.domain.Comment;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.iterator.TilIterator;
+import me.tiary.dummydata.iterator.factory.TilIteratorFactory;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ import java.util.Optional;
 public class CommentGenerator {
     private final CommentHandler commentHandler;
 
-    private final ObjectProvider<TilIterator> tilIteratorProvider;
+    private final TilIteratorFactory tilIteratorFactory;
 
     private final ProfileAccessor profileAccessor;
 
@@ -36,7 +36,7 @@ public class CommentGenerator {
     @EntityGenerationLogging(entity = "Comment")
     public long generateComments(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
         final List<Comment> comments = new ArrayList<>();
-        final TilIterator tilIterator = tilIteratorProvider.getObject();
+        final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
         final Range profileIdRange = profileAccessor.findProfileIdRange();
         long totalRows = 0L;
 

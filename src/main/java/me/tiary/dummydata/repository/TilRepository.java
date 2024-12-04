@@ -5,6 +5,7 @@ import me.tiary.dummydata.repository.custom.TilCustomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,4 +13,6 @@ public interface TilRepository extends JpaRepository<Til, Long>, TilCustomReposi
     Optional<Til> findFirstByOrderByIdAsc();
 
     Optional<Til> findFirstByOrderByIdDesc();
+
+    List<Til> findAllByIdBetween(final Long lowerBoundId, final Long upperBoundId);
 }
