@@ -6,8 +6,8 @@ import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.domain.Account;
 import me.tiary.dummydata.iterator.ProfileIterator;
+import me.tiary.dummydata.iterator.factory.ProfileIteratorFactory;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.List;
 public class AccountGenerator {
     private final AccountHandler accountHandler;
 
-    private final ObjectProvider<ProfileIterator> profileIteratorProvider;
+    private final ProfileIteratorFactory profileIteratorFactory;
 
     private final Faker faker;
 
@@ -28,7 +28,7 @@ public class AccountGenerator {
     @EntityGenerationLogging(entity = "Account")
     public long generateAccounts(final long rows, final long batchSize) {
         final List<Account> accounts = new ArrayList<>();
-        final ProfileIterator profileIterator = profileIteratorProvider.getObject();
+        final ProfileIterator profileIterator = profileIteratorFactory.create(batchSize);
         long totalRows;
 
         for (totalRows = 0L; totalRows < rows; totalRows++) {

@@ -29,6 +29,14 @@ public class ProfileAccessor {
         return profileRepository.findById(id);
     }
 
+    public List<Profile> findAllByIdBetween(final long lowerBoundId, final long upperBoundId) {
+        return profileRepository.findAllByIdBetween(lowerBoundId, upperBoundId);
+    }
+
+    public List<Profile> findAllByIdBetween(final Range idRange) {
+        return findAllByIdBetween(idRange.lowerBound(), idRange.upperBound());
+    }
+
     public void insertProfiles(final List<Profile> profiles) {
         profileRepository.saveBatch(profiles);
     }

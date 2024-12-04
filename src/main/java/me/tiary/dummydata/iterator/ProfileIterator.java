@@ -3,31 +3,46 @@ package me.tiary.dummydata.iterator;
 import me.tiary.dummydata.accessor.ProfileAccessor;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Profile;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public final class ProfileIterator implements Iterator<Profile> {
     private final ProfileAccessor profileAccessor;
 
+    private final long batchSize;
+
     private final Range profileIdRange;
 
-    private Profile currentProfile;
+    private final Queue<Profile> profileQueue;
+
+    private Range nextBatchIdRange;
 
     public ProfileIterator(final ProfileAccessor profileAccessor) {
+        this(profileAccessor, 1L);
+    }
+
+    public ProfileIterator(final ProfileAccessor profileAccessor, final long batchSize) {
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("ProfileIterator requires at least 1 batch size");
+        }
+
         this.profileAccessor = profileAccessor;
+        this.batchSize = batchSize;
         this.profileIdRange = profileAccessor.findProfileIdRange();
-        this.currentProfile = findNext(profileIdRange.lowerBound() - 1);
+        this.profileQueue = new ArrayDeque<>();
+        this.nextBatchIdRange = calculateNextBatchIdRange(profileIdRange.lowerBound() - 1);
     }
 
     @Override
     public boolean hasNext() {
-        return currentProfile != null;
+        if (profileQueue.isEmpty()) {
+            fetchNextBatch();
+        }
+
+        return !profileQueue.isEmpty();
     }
 
     @Override
@@ -36,21 +51,17 @@ public final class ProfileIterator implements Iterator<Profile> {
             throw new NoSuchElementException("ProfileIterator has no more elements");
         }
 
-        final Profile result = currentProfile;
-        currentProfile = findNext(result.getId());
-
-        return result;
+        return profileQueue.poll();
     }
 
-    private Profile findNext(final long currentId) {
-        Profile next = null;
-        long nextId = currentId + 1;
-
-        while (next == null && nextId <= profileIdRange.upperBound()) {
-            next = profileAccessor.findById(nextId).orElse(null);
-            nextId++;
+    private void fetchNextBatch() {
+        while (profileQueue.isEmpty() && nextBatchIdRange.lowerBound() <= profileIdRange.upperBound()) {
+            profileQueue.addAll(profileAccessor.findAllByIdBetween(nextBatchIdRange));
+            nextBatchIdRange = calculateNextBatchIdRange(nextBatchIdRange.upperBound());
         }
+    }
 
-        return next;
+    private Range calculateNextBatchIdRange(final long previousBatchUpperBoundId) {
+        return new Range(previousBatchUpperBoundId + 1, Math.min(previousBatchUpperBoundId + batchSize, profileIdRange.upperBound()));
     }
 }

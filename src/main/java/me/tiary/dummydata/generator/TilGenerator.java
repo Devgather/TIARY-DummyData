@@ -8,8 +8,8 @@ import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.domain.Til;
 import me.tiary.dummydata.iterator.ProfileIterator;
+import me.tiary.dummydata.iterator.factory.ProfileIteratorFactory;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import java.util.List;
 public class TilGenerator {
     private final TilHandler tilHandler;
 
-    private final ObjectProvider<ProfileIterator> profileIteratorProvider;
+    private final ProfileIteratorFactory profileIteratorFactory;
 
     private final Faker faker;
 
@@ -31,7 +31,7 @@ public class TilGenerator {
     @EntityGenerationLogging(entity = "Til")
     public long generateTils(final Range rowsRangePerProfile, final long batchSize) throws NoSuchAlgorithmException {
         final List<Til> tils = new ArrayList<>();
-        final ProfileIterator profileIterator = profileIteratorProvider.getObject();
+        final ProfileIterator profileIterator = profileIteratorFactory.create(batchSize);
         long totalRows = 0L;
 
         while (profileIterator.hasNext()) {
