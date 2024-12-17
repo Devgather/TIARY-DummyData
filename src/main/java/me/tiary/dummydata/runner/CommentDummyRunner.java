@@ -22,7 +22,7 @@ public final class CommentDummyRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... args) throws Exception {
+    public void run(final String... args) {
         commentGenerator.generateComments(rowsRangePerTil, batchSize);
     }
 }

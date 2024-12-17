@@ -22,7 +22,7 @@ public final class TilTagDummyRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... args) throws Exception {
+    public void run(final String... args) {
         tilTagGenerator.generateTilTags(rowsRangePerTil, batchSize);
     }
 }

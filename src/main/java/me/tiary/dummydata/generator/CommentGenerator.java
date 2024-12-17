@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class CommentGenerator {
 
     @Transactional
     @EntityGenerationLogging(entity = "Comment")
-    public long generateComments(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
+    public long generateComments(final Range rowsRangePerTil, final long batchSize) {
         final List<Comment> comments = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
         final Range profileIdRange = profileAccessor.findProfileIdRange();

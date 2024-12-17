@@ -22,7 +22,7 @@ public final class OAuthDummyRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... args) throws Exception {
+    public void run(final String... args) {
         oAuthGenerator.generateOAuths(rowsRangePerProfile, batchSize);
     }
 }

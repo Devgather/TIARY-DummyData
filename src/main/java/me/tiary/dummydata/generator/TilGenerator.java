@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class TilGenerator {
 
     @Transactional
     @EntityGenerationLogging(entity = "Til")
-    public long generateTils(final Range rowsRangePerProfile, final long batchSize) throws NoSuchAlgorithmException {
+    public long generateTils(final Range rowsRangePerProfile, final long batchSize) {
         final List<Til> tils = new ArrayList<>();
         final ProfileIterator profileIterator = profileIteratorFactory.create(batchSize);
         long totalRows = 0L;

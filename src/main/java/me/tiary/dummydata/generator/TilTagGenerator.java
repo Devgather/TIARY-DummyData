@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class TilTagGenerator {
 
     @Transactional
     @EntityGenerationLogging(entity = "TilTag")
-    public long generateTilTags(final Range rowsRangePerTil, final long batchSize) throws NoSuchAlgorithmException {
+    public long generateTilTags(final Range rowsRangePerTil, final long batchSize) {
         final List<TilTag> tilTags = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
         final Range tagIdRange = tagAccessor.findTagIdRange();
