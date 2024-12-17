@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public final class TilIterator implements Iterator<Til> {
+    public static final long DEFAULT_BATCH_SIZE = 1L;
+
     private final TilAccessor tilAccessor;
 
     private final long batchSize;
@@ -21,7 +23,7 @@ public final class TilIterator implements Iterator<Til> {
     private Range nextBatchIdRange;
 
     public TilIterator(final TilAccessor tilAccessor) {
-        this(tilAccessor, 1L);
+        this(tilAccessor, DEFAULT_BATCH_SIZE);
     }
 
     public TilIterator(final TilAccessor tilAccessor, final long batchSize) {

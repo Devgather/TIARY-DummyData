@@ -10,6 +10,8 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public final class ProfileIterator implements Iterator<Profile> {
+    public static final long DEFAULT_BATCH_SIZE = 1L;
+
     private final ProfileAccessor profileAccessor;
 
     private final long batchSize;
@@ -21,7 +23,7 @@ public final class ProfileIterator implements Iterator<Profile> {
     private Range nextBatchIdRange;
 
     public ProfileIterator(final ProfileAccessor profileAccessor) {
-        this(profileAccessor, 1L);
+        this(profileAccessor, DEFAULT_BATCH_SIZE);
     }
 
     public ProfileIterator(final ProfileAccessor profileAccessor, final long batchSize) {
