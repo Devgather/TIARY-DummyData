@@ -2,14 +2,15 @@ package me.tiary.dummydata.generator;
 
 import lombok.RequiredArgsConstructor;
 import me.tiary.dummydata.accessor.CommentAccessor;
-import me.tiary.dummydata.accessor.ProfileAccessor;
 import me.tiary.dummydata.annotation.EntityGenerationLogging;
 import me.tiary.dummydata.annotation.EntityInsertionLogging;
 import me.tiary.dummydata.data.Range;
 import me.tiary.dummydata.domain.Comment;
 import me.tiary.dummydata.domain.Profile;
 import me.tiary.dummydata.domain.Til;
+import me.tiary.dummydata.iterator.ProfileRandomIterator;
 import me.tiary.dummydata.iterator.TilIterator;
+import me.tiary.dummydata.iterator.factory.ProfileRandomIteratorFactory;
 import me.tiary.dummydata.iterator.factory.TilIteratorFactory;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class CommentGenerator {
 
     private final TilIteratorFactory tilIteratorFactory;
 
-    private final ProfileAccessor profileAccessor;
+    private final ProfileRandomIteratorFactory profileRandomIteratorFactory;
 
     private final Faker faker;
 
@@ -36,26 +39,24 @@ public class CommentGenerator {
     public long generateComments(final Range rowsRangePerTil, final long batchSize) {
         final List<Comment> comments = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
-        final Range profileIdRange = profileAccessor.findProfileIdRange();
+        final ProfileRandomIterator profileRandomIterator = profileRandomIteratorFactory.create(batchSize, ProfileRandomIterator.DEFAULT_MAX_FETCH_ATTEMPTS);
         long totalRows = 0L;
 
         while (tilIterator.hasNext()) {
             final Til til = tilIterator.next();
-            final List<Long> profileIds = profileIdRange.generateRandomValues(rowsRangePerTil.generateRandomValue());
+            final List<Profile> profiles = StreamSupport.stream(Spliterators.spliteratorUnknownSize(profileRandomIterator, Spliterator.ORDERED | Spliterator.NONNULL), false)
+                    .limit(rowsRangePerTil.generateRandomValue())
+                    .toList();
 
-            for (final long profileId : profileIds) {
-                final Optional<Profile> profile = profileAccessor.findById(profileId);
+            for (final Profile profile : profiles) {
+                final Comment comment = Comment.builder()
+                        .profile(profile)
+                        .til(til)
+                        .content(generateContent())
+                        .build();
 
-                if (profile.isPresent()) {
-                    final Comment comment = Comment.builder()
-                            .profile(profile.get())
-                            .til(til)
-                            .content(generateContent())
-                            .build();
-
-                    comments.add(comment);
-                    totalRows++;
-                }
+                comments.add(comment);
+                totalRows++;
 
                 if (comments.size() >= batchSize) {
                     commentHandler.insertComments(comments);

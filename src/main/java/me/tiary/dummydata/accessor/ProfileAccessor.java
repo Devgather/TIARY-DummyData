@@ -25,8 +25,8 @@ public class ProfileAccessor {
         return new Range(-1L, -1L);
     }
 
-    public Optional<Profile> findById(final long id) {
-        return profileRepository.findById(id);
+    public List<Profile> findAllById(final List<Long> ids) {
+        return profileRepository.findAllById(ids);
     }
 
     public List<Profile> findAllByIdBetween(final long lowerBoundId, final long upperBoundId) {
