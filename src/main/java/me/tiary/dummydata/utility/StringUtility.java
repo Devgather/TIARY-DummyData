@@ -9,17 +9,21 @@ import java.util.Random;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringUtility {
-    public static String generateRandomString(final int length) {
-        try {
-            final Random random = SecureRandom.getInstanceStrong();
+    private static final Random random;
 
-            return random.ints('0', 'z' + 1)
-                    .filter(x -> (x <= '9' || x >= 'A') && (x <= 'Z' || x >= 'a'))
-                    .limit(length)
-                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
+    static {
+        try {
+            random = SecureRandom.getInstanceStrong();
         } catch (final NoSuchAlgorithmException ex) {
-            return null;
+            throw new IllegalStateException("Failed to initialize StringUtility", ex);
         }
+    }
+
+    public static String generateRandomString(final int length) {
+        return random.ints('0', 'z' + 1)
+                .filter(x -> (x <= '9' || x >= 'A') && (x <= 'Z' || x >= 'a'))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }
