@@ -25,7 +25,7 @@ public final class VerificationDummyRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(final String... args) throws Exception {
+    public void run(final String... args) {
         verificationGenerator.generateVerifications(rows, batchSize);
     }
 }

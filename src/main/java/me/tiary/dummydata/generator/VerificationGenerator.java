@@ -14,17 +14,28 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
 public class VerificationGenerator {
+    private static final Random random;
+
     private final VerificationHandler verificationHandler;
 
     private final Faker faker;
 
+    static {
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (final NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("Failed to initialize VerificationGenerator", ex);
+        }
+    }
+
     @Transactional
     @EntityGenerationLogging(entity = "Verification")
-    public long generateVerifications(final long rows, final long batchSize) throws NoSuchAlgorithmException {
+    public long generateVerifications(final long rows, final long batchSize) {
         final List<Verification> verifications = new ArrayList<>();
         long totalRows;
 
@@ -59,8 +70,8 @@ public class VerificationGenerator {
         return faker.expression("#{letterify '" + "?".repeat(Verification.CODE_MAX_LENGTH) + "'}");
     }
 
-    public boolean generateState() throws NoSuchAlgorithmException {
-        return SecureRandom.getInstanceStrong().nextBoolean();
+    public boolean generateState() {
+        return random.nextBoolean();
     }
 
     @Component
