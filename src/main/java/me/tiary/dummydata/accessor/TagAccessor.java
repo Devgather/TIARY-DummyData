@@ -25,8 +25,8 @@ public class TagAccessor {
         return new Range(-1L, -1L);
     }
 
-    public Optional<Tag> findById(final long id) {
-        return tagRepository.findById(id);
+    public List<Tag> findAllById(final List<Long> ids) {
+        return tagRepository.findAllById(ids);
     }
 
     public void insertTags(final List<Tag> tags) {
