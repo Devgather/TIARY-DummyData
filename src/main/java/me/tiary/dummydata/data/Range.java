@@ -31,12 +31,4 @@ public record Range(long lowerBound, long upperBound) {
                 .boxed()
                 .toList();
     }
-
-    public List<Long> generateUniqueRandomValues(final long size) {
-        return random.longs(lowerBound, upperBound + 1)
-                .distinct()
-                .limit(Math.min(size, upperBound - lowerBound + 1))
-                .boxed()
-                .toList();
-    }
 }
