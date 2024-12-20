@@ -39,7 +39,7 @@ public class CommentGenerator {
     public long generateComments(final Range rowsRangePerTil, final long batchSize) {
         final List<Comment> comments = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
-        final ProfileRandomIterator profileRandomIterator = profileRandomIteratorFactory.create(batchSize, ProfileRandomIterator.DEFAULT_MAX_FETCH_ATTEMPTS);
+        final ProfileRandomIterator profileRandomIterator = profileRandomIteratorFactory.create(batchSize, ProfileRandomIterator.DEFAULT_MAX_FETCH_ATTEMPTS, 10.0 / batchSize);
         long totalRows = 0L;
 
         while (tilIterator.hasNext()) {

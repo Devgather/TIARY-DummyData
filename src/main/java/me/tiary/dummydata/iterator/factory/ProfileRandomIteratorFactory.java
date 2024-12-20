@@ -14,7 +14,7 @@ public final class ProfileRandomIteratorFactory {
         return new ProfileRandomIterator(profileAccessor);
     }
 
-    public ProfileRandomIterator create(final long batchSize, final int maxFetchAttempts) {
-        return new ProfileRandomIterator(profileAccessor, batchSize, maxFetchAttempts);
+    public ProfileRandomIterator create(final long batchSize, final int maxFetchAttempts, final double duplicateProbability) {
+        return new ProfileRandomIterator(profileAccessor, batchSize, maxFetchAttempts, duplicateProbability);
     }
 }
