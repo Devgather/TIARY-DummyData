@@ -14,7 +14,7 @@ public final class TagRandomIteratorFactory {
         return new TagRandomIterator(tagAccessor);
     }
 
-    public TagRandomIterator create(final long batchSize, final int maxFetchAttempts) {
-        return new TagRandomIterator(tagAccessor, batchSize, maxFetchAttempts);
+    public TagRandomIterator create(final long batchSize, final int maxFetchAttempts, final double duplicateProbability) {
+        return new TagRandomIterator(tagAccessor, batchSize, maxFetchAttempts, duplicateProbability);
     }
 }

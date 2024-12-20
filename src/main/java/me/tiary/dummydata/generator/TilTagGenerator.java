@@ -36,7 +36,7 @@ public class TilTagGenerator {
     public long generateTilTags(final Range rowsRangePerTil, final long batchSize) {
         final List<TilTag> tilTags = new ArrayList<>();
         final TilIterator tilIterator = tilIteratorFactory.create(batchSize);
-        final TagRandomIterator tagRandomIterator = tagRandomIteratorFactory.create(batchSize, TagRandomIterator.DEFAULT_MAX_FETCH_ATTEMPTS);
+        final TagRandomIterator tagRandomIterator = tagRandomIteratorFactory.create(batchSize, TagRandomIterator.DEFAULT_MAX_FETCH_ATTEMPTS, 10.0 / batchSize);
         long totalRows = 0L;
 
         while (tilIterator.hasNext()) {

@@ -25,8 +25,12 @@ public class TagAccessor {
         return new Range(-1L, -1L);
     }
 
-    public List<Tag> findAllById(final List<Long> ids) {
-        return tagRepository.findAllById(ids);
+    public List<Tag> findAllByIdBetween(final long lowerBoundId, final long upperBoundId) {
+        return tagRepository.findAllByIdBetween(lowerBoundId, upperBoundId);
+    }
+
+    public List<Tag> findAllByIdBetween(final Range idRange) {
+        return findAllByIdBetween(idRange.lowerBound(), idRange.upperBound());
     }
 
     public void insertTags(final List<Tag> tags) {
