@@ -2,7 +2,6 @@ package me.tiary.dummydata.data;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.List;
 import java.util.Random;
 
 public record Range(long lowerBound, long upperBound) {
@@ -24,11 +23,5 @@ public record Range(long lowerBound, long upperBound) {
 
     public long generateRandomValue() {
         return random.nextLong(upperBound - lowerBound + 1) + lowerBound;
-    }
-
-    public List<Long> generateRandomValues(final long size) {
-        return random.longs(size, lowerBound, upperBound + 1)
-                .boxed()
-                .toList();
     }
 }
