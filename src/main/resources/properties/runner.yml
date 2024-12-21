@@ -22,7 +22,7 @@ runner:
 
     til:
       enabled: true
-      rows-range-per-profile: 0-10
+      rows-range-per-profile: 0-5
       batch-size: 10000
 
     tag:
