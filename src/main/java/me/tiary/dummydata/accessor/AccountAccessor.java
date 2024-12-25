@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AccountAccessor {
+public final class AccountAccessor {
     private final AccountRepository accountRepository;
 
     public void insertAccounts(final List<Account> accounts) {

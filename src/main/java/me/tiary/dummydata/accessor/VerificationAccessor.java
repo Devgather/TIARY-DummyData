@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class VerificationAccessor {
+public final class VerificationAccessor {
     private final VerificationRepository verificationRepository;
 
     public void insertVerifications(final List<Verification> verifications) {

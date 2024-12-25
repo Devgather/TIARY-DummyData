@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class CommentAccessor {
+public final class CommentAccessor {
     private final CommentRepository commentRepository;
 
     public void insertComments(final List<Comment> comments) {

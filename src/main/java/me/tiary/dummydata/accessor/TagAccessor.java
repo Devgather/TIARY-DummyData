@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class TagAccessor {
+public final class TagAccessor {
     private final TagRepository tagRepository;
 
     public Range findTagIdRange() {

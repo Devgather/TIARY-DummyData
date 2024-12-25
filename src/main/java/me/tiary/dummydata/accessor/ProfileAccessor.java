@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ProfileAccessor {
+public final class ProfileAccessor {
     private final ProfileRepository profileRepository;
 
     public Range findProfileIdRange() {

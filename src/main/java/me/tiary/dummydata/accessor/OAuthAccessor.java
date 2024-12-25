@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class OAuthAccessor {
+public final class OAuthAccessor {
     private final OAuthRepository oAuthRepository;
 
     public void insertOAuths(final List<OAuth> oAuths) {

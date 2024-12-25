@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class TilTagAccessor {
+public final class TilTagAccessor {
     private final TilTagRepository tilTagRepository;
 
     public void insertTilTags(final List<TilTag> tilTags) {

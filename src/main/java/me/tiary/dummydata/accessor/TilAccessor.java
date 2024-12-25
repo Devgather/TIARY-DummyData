@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class TilAccessor {
+public final class TilAccessor {
     private final TilRepository tilRepository;
 
     public Range findTilIdRange() {
